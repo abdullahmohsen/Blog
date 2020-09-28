@@ -10,13 +10,6 @@
             <div class="col-md-12">
                 <h1 class="my-4">Create post</h1>
 
-                @if ($errors->any())
-                    @foreach($errors->all() as $error)
-                        <div class="alert alert-danger" role="alert">
-                            <strong>{{ $error }}</strong>
-                        </div>
-                    @endforeach
-                @endif
                 <!-- form Post -->
                 <form method="POST" action="{{ route('store.post') }}" enctype="multipart/form-data">
                     @csrf

@@ -35,7 +35,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ route('create.post') }}">Create</a>
+            <a class="nav-link" href="{{ route('create.post') }}">Create Post</a>
           </li>
         </ul>
       </div>

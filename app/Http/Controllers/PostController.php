@@ -35,6 +35,7 @@ class PostController extends Controller
             ->withErrors($data)
             ->withInput();
         }
+
         $imageName="";
         if ($request->hasFile('image'))
         {
@@ -51,7 +52,7 @@ class PostController extends Controller
         $post->content = $request->content;
         $post->image = $imageName;
         $post->save();
-        return redirect('posts');
+        return redirect('posts')->with('success', 'Post Created');
     }
 
     public function show($id)
@@ -102,18 +103,18 @@ class PostController extends Controller
         $post->content = $request->content;
         $post->image = $imageName;
         $post->save();
-        return redirect('posts');
+        return redirect('posts')->with('success', 'Post Updated');
     }
 
     public function destroy($id)
     {
         $post = Post::where('id', $id)->first();
-        
+
         //Delete image
         $old_name = $post->image;
         Storage::disk('uploads')->delete($old_name);
 
         $post->delete();
-        return redirect('posts');
+        return redirect('posts')->with('success', 'Post Removed');
     }
 }
