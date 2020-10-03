@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 
 
 @section('content')
@@ -15,13 +15,13 @@
                     <small>{{ $post->title }}</small>
                 </h1>
 
-                @if ($errors->any())
+                {{--  @if ($errors->any())
                     @foreach($errors->all() as $error)
                         <div class="alert alert-danger" role="alert">
                             <strong>{{ $error }}</strong>
                         </div>
                     @endforeach
-                @endif
+                @endif  --}}
                 <!-- form Post -->
                 <form method="POST" action="{{ route('update.post', $post->id) }}" enctype="multipart/form-data">
                     @csrf

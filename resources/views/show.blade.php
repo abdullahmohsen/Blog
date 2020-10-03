@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 
 
 @section('content')
@@ -9,7 +9,13 @@
         <div class="row">
 
             <!-- Blog Entries Column -->
-            <div class="col-md-12">
+
+            {{--  <div class="m-auto text-center">
+                <div id="msgSuccess" class="text-center alert alert-success"></div>
+                <div id="msgErrors" class="text-center alert alert-danger"></div>
+            </div>  --}}
+
+            <div class="col-md-12 postRow{{$post->id}}">
 
                 <h1 class="my-4">Show
                     <small>{{ $post->title }}</small>
@@ -24,11 +30,16 @@
                         <p class="card-text">{{ $post->desc }}</p>
                         <h6 class="mb-0">Content:</h6>
                         <p class="card-text">{{ $post->content }}</p>
-                        <a href="{{ route('edit.post', $post->id) }}" class="btn btn-success">Edit</a>
-                        <a href="{{ route('destroy.post', $post->id) }}" class="btn btn-danger">Delete</a>
+                        @if(!Auth::guest())
+                            @if(Auth::user()->id == $post->user_id)
+                                <a href="{{ route('edit.post', $post->id) }}" class="btn btn-success">Edit</a>
+                                <a href="{{ route('destroy.post', $post->id) }}" class="btn btn-danger">Delete</a>
+                            @endif
+                        @endif
+
                     </div>
                     <div class="card-footer text-muted">
-                        Posted on {{ $post->created_at }}
+                        Posted on {{ $post->created_at }} by {{ $post->user->name}}
                     </div>
                 </div>
             </div>

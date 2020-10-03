@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 
 
 @section('content')
@@ -8,7 +8,7 @@
         <div class="row">
             <!-- Blog Entries Column -->
             <div class="col-md-12">
-                <h1 class="my-4">Create post</h1>
+                <h1 class="mb-4">Create post</h1>
 
                 <!-- form Post -->
                 <form method="POST" action="{{ route('store.post') }}" enctype="multipart/form-data">
