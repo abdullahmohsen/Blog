@@ -14,7 +14,7 @@
                 <div class="d-flex justify-content-between align-items-center my-4 w-100">
                     <h1>{{ __('messages.All Posts') }}</h1>
                     {{--  <a href="{{ route('create.ajaxpost') }}" class="btn btn-primary">Create Post</a>  --}}
-                    <button href="" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    <button href="" type="button" class="btn btn-primary" data-toggle="modal" data-target="#postCreateModel">
                         {{ __('messages.Create Post') }}
                     </button>
                 </div>
@@ -30,15 +30,23 @@
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <h2 class="card-title">{{ $post->title }}</h2>
+                                <div class="d-flex justify-content-between align-items-center w-100">
+                                    <h2 class="card-title">{{ $post->title }}</h2>
+                                    <a class="btn btn-primary showbtn text-white" data-id="{{ $post->id }}" data-title="{{ $post->title }}" data-image="{{ $post->image }}"
+                                        data-desc="{{ $post->desc }}" data-content="{{ $post->content }}" data-created_at="{{ $post->created_at }}" data-user_name="{{ $post->user->name }}">Show</a>
+                                </div>
                                 <p class="card-text">{{ $post->desc }}</p>
                                 <a href="{{ route('show.post', $post->id) }}" class="btn btn-primary w-25">Read More &rarr;</a>
 
                                 @if(!Auth::guest())
                                     @if(Auth::user()->id == $post->user_id)
-                                        //Edit btn AJAX
-                                        <a href="{{ route('edit.ajaxpost', $post->id) }}" class="btn btn-success edit_btn d-block mt-1 w-25" data-toggle="modal" data-target="#exampleModalEdit">Edit &rarr;</a>
-                                        //delete btn AJAX
+
+                                        {{--  Edit btn AJAX  --}}
+                                        {{--  <a href="{{ route('edit.ajaxpost', $post->id) }}" class="btn btn-success edit_btn d-block mt-1 w-25" data-toggle="modal" data-target="#exampleModalEdit">Edit &rarr;</a>  --}}
+                                        <a class="text-white btn btn-success editbtn d-block mt-1 w-25" data-id="{{ $post->id }}" data-title="{{ $post->title }}"
+                                            data-desc="{{ $post->desc }}" data-content="{{ $post->content }}" data-image="{{ $post->image }}">Edit &rarr;</a>
+
+                                        {{--  delete btn AJAX  --}}
                                         <a post_id="{{ $post->id }}" class="text-white btn btn-danger delete_btn d-block mt-1 w-25">Delete &rarr;</a>
                                     @endif
                                 @endif
@@ -53,8 +61,43 @@
     </div>
 @endsection
 
+<!-- Show Modal -->
+<div class="modal fade" id="postShowModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content postRow{{$post->id}}">
+            <div class="modal-header mb-2">
+                <h5 class="modal-title" id="exampleModalLabel">Show
+                    <small id="title"></small></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Blog Post -->
+                <div class="card mb-4">
+                    <img class="card-img-top" id="image" src="{{ asset('assets/uploads/'.$post->image) }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h2 class="card-title" id="title"></h2>
+                        <hr>
+                        <h6 class="mb-0">Description:</h6>
+                        <p class="card-text" id="desc"></p>
+                        <h6 class="mb-0">Content:</h6>
+                        <p class="card-text" id="content"></p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Posted on <span id="created_at"></span> by <span id="user_name"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Create and Store Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="postCreateModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header mb-2">
@@ -67,7 +110,7 @@
             <div id="msgSuccess" class="text-center alert alert-success"></div>
             <div id="msgErrors" class="text-center alert alert-danger"></div>
         </div>
-        <form method="post" action="" id="form_post" enctype= "multipart/form-data">
+        <form id="createFormID" enctype= "multipart/form-data">
             @csrf
             <div class="modal-body">
                 <div class="form-group">
@@ -96,9 +139,8 @@
     </div>
 </div>
 
-
 <!-- Edit and Update Modal -->
-<div class="modal fade" id="exampleModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="postEditModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header mb-2">
@@ -111,24 +153,24 @@
             <div id="msgSuccessEdit" class="text-center alert alert-success"></div>
             <div id="msgErrorsEdit" class="text-center alert alert-danger"></div>
         </div>
-        <form method="post" action="" id="form_edit" enctype= "multipart/form-data">
+        <form id="editFormID" enctype= "multipart/form-data">
             @csrf
             <div class="modal-body">
-                <input type="hidden" name="post_id" value="{{ $post->id }}">
+                <input type="hidden" name="id" id="id">
 
                 <div class="form-group">
                     <label>Title:</label>
-                    <input type="text" class="form-control" name="title" value="{{ $post->title }}">
+                    <input type="text" class="form-control" name="title" id="title">
                 </div>
                 <div class="form-group">
                     <label>Desc:</label>
-                    <textarea class="form-control" name="desc" cols="30" rows="5">{{ $post->desc }}</textarea>
+                    <textarea class="form-control" name="desc" id="desc" cols="30" rows="5"></textarea>
                 </div>
                 <div class="form-group">
                     <label>Content:</label>
-                    <textarea class="form-control" name="content" cols="30" rows="5">{{ $post->content }}</textarea>
+                    <textarea class="form-control" name="content" id="content" cols="30" rows="5"></textarea>
                 </div>
-                <img width="250px" class="img-fluid" src="{{ asset('assets/uploads/'.$post->image) }}">
+                <img width="250px" id="image"  class="img-fluid" src="{{ asset('assets/uploads/'.$post->image) }}">
 
                 <div class="form-group">
                     <label>Image:</label>
@@ -136,7 +178,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input id="save_edit" class="btn btn-primary" type="submit" value="Update">
+                <input id="update_edit" class="btn btn-primary" type="submit" value="Update">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </form>
@@ -147,8 +189,22 @@
 
 @section('scripts')
 
-    <!-- jquery core JavaScript -->
-    <script src="{{ asset('assets') }}/vendor/jquery/jquery-3.5.1.min.js"></script>
+    <!-- Show -->
+    <script>
+
+        $(document).on('click', '.showbtn', function(){
+
+            $('#id').text($(this).data('id'));
+            $('#title').text($(this).data('title'));
+            $('#desc').text($(this).data('desc'));
+            $('#content').text($(this).data('content'));
+            $('#image').show($(this).data('image'));
+            $('#created_at').text($(this).data('created_at'));
+            $('#user_name').text($(this).data('user_name'));
+
+            $('#postShowModel').modal('show');
+        });
+    </script>
 
     <!-- Create and Store -->
     <script>
@@ -162,11 +218,11 @@
         $(document).on('click', '#save_post', function(e){
             e.preventDefault();
 
-            $('#msgSuccess').hide()
-            $('#msgErrors').hide()
-            $('#msgErrors').empty()
+            //$('#msgSuccess').hide()
+            //$('#msgErrors').hide()
+            //$('#msgErrors').empty()
 
-            let formData = new FormData($('#form_post')[0]);
+            let formData = new FormData($('#createFormID')[0]);
 
             //console.log(formData);
 
@@ -189,7 +245,7 @@
                     }, 3000);
 
                     //Close the Modal and add the post without reload then show the msgSuccess in the home page in a few min.
-                    //$('#exampleModal').modal('hide');
+                    //$('#postCreateModel').modal('hide');
                     location.reload();
                 },
                 error: function (xhr, status, error)
@@ -212,14 +268,30 @@
         $('#msgSuccessEdit').hide()
         $('#msgErrorsEdit').hide()
 
-        $(document).on('click', '#save_edit', function(e){
+        //$(document).ready(function(){
+        //    $('.editbtn').on('click', function(){
+        //        $('#postEditModel').modal('show');
+
+
+        $(document).on('click', '.editbtn', function(){
+            $('#editFormID').show();
+
+            $('#id').val($(this).data('id'));
+            $('#title').val($(this).data('title'));
+            $('#desc').val($(this).data('desc'));
+            $('#content').val($(this).data('content'));
+            $('#image').val($(this).data('image'));
+
+            $('#postEditModel').modal('show');
+        });
+
+        //{{--  $('.model-footer').on('click', '#update_edit', function(){  --}}
+
+
+        $(document).on('click', '#update_edit', function(e){
             e.preventDefault();
 
-            $('#msgSuccessEdit').hide()
-            $('#msgErrorsEdit').hide()
-            $('#msgErrorsEdit').empty()
-
-            let formData = new FormData($('#form_edit')[0]);
+            let formData = new FormData($('#editFormID')[0]);
 
             $.ajax({
                 type: 'POST',
@@ -237,6 +309,7 @@
                     setTimeout(function() {
                         $('#msgSuccessEdit').fadeOut('fast');
                     }, 3000);
+                    location.reload();
                 },
                 error: function (xhr, status, error)
                 {
@@ -296,7 +369,6 @@
             })
         });
     </script>
-
 
 @endsection
 

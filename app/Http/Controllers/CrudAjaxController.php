@@ -13,10 +13,10 @@ class CrudAjaxController extends Controller
 {
     use PostTrait;
 
-    public function create()
-    {
-        return view('posts');
-    }
+    // public function create()
+    // {
+    //     return view('posts');
+    // }
 
     public function store(PostRequest $request)
     {
@@ -41,17 +41,25 @@ class CrudAjaxController extends Controller
 
     }
 
-    public function edit(Request $request)
-    {
-        $post = Post::findOrFail($request->post_id);
+    // if ($data->fails())
+    // {
+    //     return response()->json(array('errors'=> $validator->getMessageBag()->toarray()));
+    // }
 
-        return view('posts', compact('post'));
-    }
+
+    // public function edit(Request $request)
+    // {
+    //     $post = Post::findOrFail($request->post_id);
+
+    //     return view('posts', compact('post'));
+    // }
 
 
     public function update(PostRequest $request)
     {
-        $post = Post::findOrFail($request->post_id);
+        $post = Post::findOrFail($request->id);
+
+        //Image
         $old_name = $post->image;
         if ($request->hasFile('image'))
         {
@@ -73,19 +81,20 @@ class CrudAjaxController extends Controller
         $post->user_id = auth()->user()->id;
         $post->image = $imageName;
         $post->save();
-        return response()->json(['success'=>'Your Post Updated successfully.']);
 
+        return response()->json(['success'=>'Your Post Updated successfully.']);
     }
+
 
     public function destroy(Request $request)
     {
         $post = Post::findOrFail($request->id);
 
         //Check for correct user
-        if(auth()->user()->id !== $post->user_id)
-        {
-            return redirect(route('index.home'))->with('error', 'Unauthorized Page');
-        }
+        // if(auth()->user()->id !== $post->user_id)
+        // {
+        //     return redirect(route('index.home'))->with('error', 'Unauthorized Page');
+        // }
 
         //Delete image
         $old_name = $post->image;

@@ -124,8 +124,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- jquery core JavaScript -->
-    {{--  <script src="{{ asset('assets') }}/vendor/jquery/jquery-3.5.1.min.js"></script>  --}}
-    @yield('scripts')
+    <script src="{{ asset('assets') }}/vendor/jquery/jquery-3.5.1.min.js"></script>
 
     <!-- popper core JavaScript -->
     <script src="{{ asset('assets') }}/vendor/popper/popper.min.js"></script>
@@ -133,6 +132,7 @@
     <!-- Bootstrap core JavaScript -->
     <script src="{{ asset('assets') }}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    @yield('scripts')
 
 
 

@@ -41,10 +41,10 @@ Route::group(['middleware' => 'verified'], function () {
 
         //CRUD AJAX
         Route::group(['prefix' => 'ajax-posts'], function () {
-            Route::get('home', [Controllers\CrudAjaxController::class, 'index'])->name('index.ajaxpost');
-            Route::get('create', [Controllers\CrudAjaxController::class, 'create'])->name('create.ajaxpost');
+            // Route::get('home', [Controllers\CrudAjaxController::class, 'index'])->name('index.ajaxpost');
+            //Route::get('create', [Controllers\CrudAjaxController::class, 'create'])->name('create.ajaxpost');
             Route::post('store', [Controllers\CrudAjaxController::class, 'store'])->name('store.ajaxpost');
-            Route::get('edit/{post_id}', [Controllers\CrudAjaxController::class, 'edit'])->name('edit.ajaxpost');
+            //Route::get('edit/{post_id}', [Controllers\CrudAjaxController::class, 'edit'])->name('edit.ajaxpost');
             Route::post('update', [Controllers\CrudAjaxController::class, 'update'])->name('update.ajaxpost');
             Route::post('destroy', [Controllers\CrudAjaxController::class, 'destroy'])->name('destroy.ajaxpost');
 
