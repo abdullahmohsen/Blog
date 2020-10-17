@@ -20,6 +20,18 @@ class CrudAjaxController extends Controller
 
     public function store(PostRequest $request)
     {
+        // $data = Validator::make($request->all(),[
+        //     'title' => 'required|string|max:100',
+        //     'desc' => 'required|string',
+        //     'content' => 'required|string',
+        //     'image' => 'required|image|mimes:png,jpg,jpeg',
+        // ]);
+
+        // if ($data->fails())
+        // {
+        //     return response()->json(array('errors'=> $validator->getMessageBag()->toarray()));
+        // }
+
         if ($request->hasFile('image'))
         {
             $imageName = $this->saveImage($request->image, 'assets/uploads');
@@ -40,12 +52,6 @@ class CrudAjaxController extends Controller
         return response()->json(['success'=>'Your Post Created successfully.']);
 
     }
-
-    // if ($data->fails())
-    // {
-    //     return response()->json(array('errors'=> $validator->getMessageBag()->toarray()));
-    // }
-
 
     // public function edit(Request $request)
     // {

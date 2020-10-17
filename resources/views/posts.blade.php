@@ -26,13 +26,13 @@
                             <div class="col-md-4">
                                 <img class="card-img-top" src="{{ asset('assets/uploads/'.$post->image) }}" alt="Card image cap">
                                 <div class="card-footer text-muted">
-                                    Posted on {{ $post->created_at }} - by {{ $post->user->name}}
+                                    Posted on {{ $post->created_at }} - by {{ $post->user->name }}
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="d-flex justify-content-between align-items-center w-100">
                                     <h2 class="card-title">{{ $post->title }}</h2>
-                                    <a class="btn btn-primary showbtn text-white" data-id="{{ $post->id }}" data-title="{{ $post->title }}" data-image="{{ $post->image }}"
+                                    <a class="btn btn-primary showbtn text-white" data-id="{{ $post->id }}" data-title="{{ $post->title }}" data-image="{{ asset('assets/uploads/'.$post->image) }}"
                                         data-desc="{{ $post->desc }}" data-content="{{ $post->content }}" data-created_at="{{ $post->created_at }}" data-user_name="{{ $post->user->name }}">Show</a>
                                 </div>
                                 <p class="card-text">{{ $post->desc }}</p>
@@ -42,9 +42,8 @@
                                     @if(Auth::user()->id == $post->user_id)
 
                                         {{--  Edit btn AJAX  --}}
-                                        {{--  <a href="{{ route('edit.ajaxpost', $post->id) }}" class="btn btn-success edit_btn d-block mt-1 w-25" data-toggle="modal" data-target="#exampleModalEdit">Edit &rarr;</a>  --}}
                                         <a class="text-white btn btn-success editbtn d-block mt-1 w-25" data-id="{{ $post->id }}" data-title="{{ $post->title }}"
-                                            data-desc="{{ $post->desc }}" data-content="{{ $post->content }}" data-image="{{ $post->image }}">Edit &rarr;</a>
+                                            data-desc="{{ $post->desc }}" data-content="{{ $post->content }}" data-image="{{ asset('assets/uploads/'.$post->image) }}">Edit &rarr;</a>
 
                                         {{--  delete btn AJAX  --}}
                                         <a post_id="{{ $post->id }}" class="text-white btn btn-danger delete_btn d-block mt-1 w-25">Delete &rarr;</a>
@@ -67,7 +66,7 @@
         <div class="modal-content postRow{{$post->id}}">
             <div class="modal-header mb-2">
                 <h5 class="modal-title" id="exampleModalLabel">Show
-                    <small id="title"></small></h5>
+                    <small id="title_show"></small></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -75,14 +74,14 @@
             <div class="modal-body">
                 <!-- Blog Post -->
                 <div class="card mb-4">
-                    <img class="card-img-top" id="image" src="{{ asset('assets/uploads/'.$post->image) }}" alt="Card image cap">
+                    <img class="card-img-top" id="image_show" src="" alt="Card image cap">
                     <div class="card-body">
-                        <h2 class="card-title" id="title"></h2>
+                        <h2 class="card-title" id="title_show1"></h2>
                         <hr>
                         <h6 class="mb-0">Description:</h6>
-                        <p class="card-text" id="desc"></p>
+                        <p class="card-text" id="desc_show"></p>
                         <h6 class="mb-0">Content:</h6>
-                        <p class="card-text" id="content"></p>
+                        <p class="card-text" id="content_show"></p>
                     </div>
                     <div class="card-footer text-muted">
                         Posted on <span id="created_at"></span> by <span id="user_name"></span>
@@ -116,18 +115,22 @@
                 <div class="form-group">
                     <label>Title:</label>
                     <input type="text" class="form-control" name="title">
+                    <small id="title_error" class="form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Desc:</label>
                     <textarea class="form-control" name="desc" cols="30" rows="5"></textarea>
+                    <small id="desc_error" class="form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Content:</label>
                     <textarea class="form-control" name="content" cols="30" rows="5"></textarea>
+                    <small id="content_error" class="form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Image:</label>
                     <input type="file" name="image" class="d-block">
+                    <small id="image_error" class="form-text text-danger"></small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -170,7 +173,7 @@
                     <label>Content:</label>
                     <textarea class="form-control" name="content" id="content" cols="30" rows="5"></textarea>
                 </div>
-                <img width="250px" id="image"  class="img-fluid" src="{{ asset('assets/uploads/'.$post->image) }}">
+                <img width="250px" id="image" class="img-fluid" src="">
 
                 <div class="form-group">
                     <label>Image:</label>
@@ -194,11 +197,12 @@
 
         $(document).on('click', '.showbtn', function(){
 
-            $('#id').text($(this).data('id'));
-            $('#title').text($(this).data('title'));
-            $('#desc').text($(this).data('desc'));
-            $('#content').text($(this).data('content'));
-            $('#image').show($(this).data('image'));
+            $('#id_show').text($(this).data('id'));
+            $('#title_show').text($(this).data('title'));
+            $('#title_show1').text($(this).data('title'));
+            $('#desc_show').text($(this).data('desc'));
+            $('#content_show').text($(this).data('content'));
+            $('#image_show').attr('src', $(this).data('image'));
             $('#created_at').text($(this).data('created_at'));
             $('#user_name').text($(this).data('user_name'));
 
@@ -218,9 +222,15 @@
         $(document).on('click', '#save_post', function(e){
             e.preventDefault();
 
-            //$('#msgSuccess').hide()
-            //$('#msgErrors').hide()
-            //$('#msgErrors').empty()
+            $('#msgSuccess').hide()
+            $('#msgErrors').hide()
+            $('#msgErrors').empty()
+
+            //tany tre2a ll error 2-2
+            $('#title_error').text('');
+            $('#desc_error').text('');
+            $('#content_error').text('');
+            $('#image_error').text('');
 
             let formData = new FormData($('#createFormID')[0]);
 
@@ -250,13 +260,16 @@
                 },
                 error: function (xhr, status, error)
                 {
-                    $('#msgErrors').show()
+                    {{--  $('#msgErrors').show()  --}} //awol tre2a ll error 1-1
                     $.each(xhr.responseJSON.errors, function(key, item)
                     {
-                        $('#msgErrors').append("<p class='mb-0'>" + item + "</p>")
+                        $("#" + key + "_error").text(item[0]); //tany tre2a ll error 2-1
+
+                        //awol tre2a ll error 1-2
+                        {{--  $('#msgErrors').append("<p class='mb-0'>" + item + "</p>")
                         setTimeout(function() {
                             $('#msgErrors').fadeOut('fast');
-                        }, 3000);
+                        }, 3000);  --}}
                     })
                 }
             })
@@ -280,7 +293,7 @@
             $('#title').val($(this).data('title'));
             $('#desc').val($(this).data('desc'));
             $('#content').val($(this).data('content'));
-            $('#image').val($(this).data('image'));
+            $('#image').attr('src', $(this).data('image'));
 
             $('#postEditModel').modal('show');
         });

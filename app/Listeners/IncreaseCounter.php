@@ -27,12 +27,23 @@ class IncreaseCounter
      */
     public function handle(VideoViewer $event)
     {
-        $this->updateViewer($event->video);
+        //lw el session mafhosh el key ely esmo videoIsVisited e3ml update ll counter
+        if (!session() -> has('videoIsVisited'))
+        {
+            $this->updateViewer($event->video);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     function updateViewer($video)
     {
         $video->viewers = $video->viewers + 1;
         $video->save();
+
+        // bakhzn id el video bet3 el user fel session
+        session()->put('videoIsVisited', $video -> id);
     }
 }

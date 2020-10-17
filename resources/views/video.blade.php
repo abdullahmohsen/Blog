@@ -18,7 +18,8 @@
                 Video Viewer ({{ $video->viewers }})
             </div>
 
-            //put the video here
+            {{--  put the video here  --}}
+            
 
         </div>
     </div>

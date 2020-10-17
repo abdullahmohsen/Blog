@@ -25,7 +25,7 @@ Route::group(['middleware' => 'verified'], function () {
     Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]], function()
     {
 
-        Route::get('/youtube', [Controllers\PostController::class, 'getVideo'])->name('youtube.video');
+        Route::get('/video', [Controllers\PostController::class, 'getVideo'])->name('youtube.video');
 
 
         Route::get('/home', [Controllers\PostController::class, 'index'])->name('index.home');

@@ -16,14 +16,23 @@
                     <div class="form-group">
                         <label>Title:</label>
                         <input type="text" class="form-control" name="title">
+                        @error('title')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label>Desc:</label>
                         <textarea class="form-control" name="desc" cols="30" rows="5"></textarea>
+                        @error('desc')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label>Content:</label>
                         <textarea class="form-control" name="content" cols="30" rows="5"></textarea>
+                        @error('content')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label>Image:</label>
