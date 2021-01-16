@@ -63,6 +63,7 @@
 <!-- Show Modal -->
 <div class="modal fade" id="postShowModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
+        @if(count($posts) > 0)
         <div class="modal-content postRow{{$post->id}}">
             <div class="modal-header mb-2">
                 <h5 class="modal-title" id="exampleModalLabel">Show
@@ -92,6 +93,7 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
+        @endif
     </div>
 </div>
 
